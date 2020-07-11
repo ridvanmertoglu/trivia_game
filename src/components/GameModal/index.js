@@ -63,7 +63,7 @@ export const styles = {
   descriptionContainer: {
     alignItems: 'center',
     justifyContent: 'center',
-    width: 150,
+    width: 200,
     height: 100,
   },
   mainDescription: {
@@ -74,8 +74,8 @@ export const styles = {
   },
   subDescription: {
     color: 'white',
-    fontSize: 20,
-    fontWeight: '500',
+    fontSize: 16,
+    fontWeight: '600',
   },
 };
 

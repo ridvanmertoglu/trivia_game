@@ -4,38 +4,58 @@ import {connect} from 'react-redux';
 import GameModal from '../../components/GameModal';
 
 const Main = (props) => {
-  const [userAnswer, setUserAnswer] = useState('');
   const [questionNumber, setQuestionNumber] = useState(0);
   const [answerList, setAnswerList] = useState([]);
-  const [showFinishModal, setShowFinishModal] = useState(false);
+  const [showFalseModal, setShowFalseModal] = useState(false);
+  const [showTrueModal, setShowTrueModal] = useState(false);
+  const [showTimeModal, setShowTimeModal] = useState(false);
+  const [totalPoints, setTotalPoints] = useState(0);
   const [time, setTime] = useState(15);
 
-  shuffle = (array) => {
-    array.sort(() => Math.random() - 0.5);
-  };
-
-  /*setTimeout(() => {
-    setTime(time - 1);
-  }, 1000);*/
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTime((time) => time - 1);
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
-    //setTime(15);
-
-    let answerList2 = [];
-    setAnswerList([...answerList2]);
-    props.questions[questionNumber].incorrect_answers.forEach((a) => {
-      answerList2.push(a);
+    let allAnswerList = [];
+    setAnswerList([...allAnswerList]);
+    props.questions[questionNumber].incorrect_answers.forEach((element) => {
+      allAnswerList.push(element);
     });
-    answerList2.push(props.questions[questionNumber].correct_answer);
-    shuffle(answerList2);
-    setAnswerList([...answerList2]);
+    allAnswerList.push(props.questions[questionNumber].correct_answer);
+    _shuffle(allAnswerList);
+    setAnswerList([...allAnswerList]);
   }, [questionNumber]);
 
   useEffect(() => {
     if (time === 0) {
-      Alert.alert('time is up');
+      setShowTimeModal(true);
     }
   }, [time]);
+
+  _shuffle = (array) => {
+    array.sort(() => Math.random() - 0.5);
+  };
+
+  _onClickNextQuestion = () => {
+    setTime(15);
+    setQuestionNumber(questionNumber + 1);
+    setShowTrueModal(false);
+  };
+
+  _correctAnswer = () => {
+    setTotalPoints(totalPoints + (questionNumber + 1) * 5);
+    setShowTrueModal(true);
+  };
+
+  _onClickMainMenu = () => {
+    props.navigation.navigate('Welcome');
+    setTotalPoints(0);
+  };
+
   return (
     <View style={{marginTop: 50, alignItems: 'center'}}>
       <Text>{props.questions[questionNumber].question}</Text>
@@ -45,25 +65,49 @@ const Main = (props) => {
           title={item}
           onPress={() =>
             item === props.questions[questionNumber].correct_answer
-              ? setQuestionNumber(questionNumber + 1)
-              : setShowFinishModal(true)
+              ? _correctAnswer()
+              : setShowFalseModal(true)
           }
         />
       ))}
-      {showFinishModal ? (
-        <Modal transparent visible={showFinishModal}>
+      {showTrueModal ? (
+        <Modal transparent visible={showTrueModal}>
+          <GameModal
+            icon="✓"
+            mainDescription="Correct"
+            subDescriptionOne={`You earned ${(questionNumber + 1) * 5} points`}
+            subDescriptionTwo={`Total: ${totalPoints} points`}
+            buttonName="Next Question"
+            buttonAction={() => _onClickNextQuestion()}
+          />
+        </Modal>
+      ) : null}
+
+      {showFalseModal ? (
+        <Modal transparent visible={showFalseModal}>
           <GameModal
             icon="X"
             mainDescription="Wrong"
             subDescriptionOne="You failed."
-            subDescriptionTwo="Total: 0 points"
+            subDescriptionTwo={`Total: ${totalPoints} points`}
             buttonName="Main Menu"
-            buttonAction={() => props.navigation.navigate('Welcome')}
+            buttonAction={() => _onClickMainMenu()}
           />
         </Modal>
-      ) : (
-        <Text>asdasd</Text>
-      )}
+      ) : null}
+
+      {showTimeModal ? (
+        <Modal transparent visible={showTimeModal}>
+          <GameModal
+            icon="!"
+            mainDescription="Time is up!"
+            subDescriptionOne="You failed."
+            subDescriptionTwo={`Total: ${totalPoints} points`}
+            buttonName="Main Menu"
+            buttonAction={() => _onClickMainMenu()}
+          />
+        </Modal>
+      ) : null}
     </View>
   );
 };
