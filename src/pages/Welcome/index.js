@@ -1,16 +1,10 @@
 /* @flow */
-import React, {useState, useEffect} from 'react';
-import {Text, View, StyleSheet, Picker, TouchableOpacity} from 'react-native';
-import {GamePicker} from '../../components/GamePicker';
+import React, {useState} from 'react';
+import {Text, View, Picker, TouchableOpacity, Image} from 'react-native';
+import {styles} from './styles';
 import {connect} from 'react-redux';
-import Init from '../../helpers/Init';
 import {getQuestions} from '../../api/questions';
-
-import {
-  categoriesRequest,
-  categoriesSuccess,
-  categoriesFail,
-} from '../../store/actions/categories';
+import {images} from '../../utils/images';
 
 import {
   questionsRequest,
@@ -36,10 +30,15 @@ const Welcome = (props) => {
   };
   return (
     <View style={styles.container}>
-      <View style={{marginBottom: 10}}>
+      <View style={styles.upperContainer}>
+        <Image source={images.rnIcon} />
+        <Text style={styles.gameTitle}>A trivia game</Text>
+        <Text style={styles.subTitle}>Select category and difficulty.</Text>
+      </View>
+      <View style={styles.categoryContainer}>
         <Picker
           selectedValue={selectedCategory}
-          style={{height: 50, width: 300}}
+          style={styles.picker}
           onValueChange={(itemValue, itemIndex) =>
             setSelectedCategory(itemValue)
           }>
@@ -51,10 +50,10 @@ const Welcome = (props) => {
           ))}
         </Picker>
       </View>
-      <View style={{marginTop: 10, justifyContent: 'flex-end'}}>
+      <View style={styles.difficultyContainer}>
         <Picker
           selectedValue={selectedDifficulty}
-          style={{height: 50, width: 300}}
+          style={styles.picker}
           onValueChange={(itemValue, itemIndex) =>
             setSelectedDifficulty(itemValue)
           }>
@@ -64,22 +63,10 @@ const Welcome = (props) => {
         </Picker>
       </View>
 
-      <View
-        style={{
-          marginTop: 60,
-          justifyContent: 'flex-end',
-        }}>
+      <View style={styles.buttonContainer}>
         <TouchableOpacity onPress={_onStart}>
-          <View
-            style={{
-              backgroundColor: 'blue',
-              width: 150,
-              height: 50,
-              justifyContent: 'center',
-              alignItems: 'center',
-              borderRadius: 10,
-            }}>
-            <Text style={{fontSize: 25, color: 'white'}}>start</Text>
+          <View style={styles.button}>
+            <Text style={styles.buttonName}>GET STARTED</Text>
           </View>
         </TouchableOpacity>
       </View>
@@ -87,65 +74,16 @@ const Welcome = (props) => {
   );
 };
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'space-evenly',
-  },
-});
-
-const mapStateToProps = ({categoriesReducer,questionsReducer}) => {
+const mapStateToProps = ({categoriesReducer, questionsReducer}) => {
   const {categories} = categoriesReducer;
   const {questions} = questionsReducer;
-  return {categories,questions};
+  return {categories, questions};
 };
 
 const mapDispatchToProps = {
-  categoriesRequest,
-  categoriesSuccess,
-  categoriesFail,
   questionsRequest,
   questionsSuccess,
   questionsFail,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Welcome);
-
-/**
- * class Welcome extends Component {
-  static navigationOptions = {
-    title: 'Welcome',
-    headerShown: false,
-  };
-
-  constructor(props) {
-    super(props);
-    this.state = {
-      selectedCategory: '',
-    };
-  }
-  _setSelectedCategory = (value) => {
-    this.setState({
-      selectedCategory: value,
-    });
-  };
-  render() {
-    return (
-      <View style={styles.container}>
-        <Picker
-          selectedValue={this.selectedValue}
-          style={{height: 50, width: 150}}
-          onValueChange={(itemValue, itemIndex) => this._setSelectedCategory}>
-          {Object.keys(this.props.categories).map((item, index) => (
-            <Picker.Item
-              key={index}
-              label={props.categories[item]}
-              value={item}></Picker.Item>
-          ))}
-        </Picker>
-      </View>
-    );
-  }
-}
- */

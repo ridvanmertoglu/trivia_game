@@ -1,5 +1,5 @@
-import React, {useState, useEffect, useRef} from 'react';
-import {Text, View, Button, Alert, Modal} from 'react-native';
+import React, {useState, useEffect} from 'react';
+import {Text, View, Button, Modal} from 'react-native';
 import {connect} from 'react-redux';
 import GameModal from '../../components/GameModal';
 
@@ -78,6 +78,7 @@ const Main = (props) => {
             subDescriptionOne={`You earned ${(questionNumber + 1) * 5} points`}
             subDescriptionTwo={`Total: ${totalPoints} points`}
             buttonName="Next Question"
+            extraStyle={{backgroundColor: '#52cc00'}}
             buttonAction={() => _onClickNextQuestion()}
           />
         </Modal>
@@ -91,6 +92,7 @@ const Main = (props) => {
             subDescriptionOne="You failed."
             subDescriptionTwo={`Total: ${totalPoints} points`}
             buttonName="Main Menu"
+            extraStyle={{backgroundColor: '#eb5757'}}
             buttonAction={() => _onClickMainMenu()}
           />
         </Modal>
@@ -104,6 +106,7 @@ const Main = (props) => {
             subDescriptionOne="You failed."
             subDescriptionTwo={`Total: ${totalPoints} points`}
             buttonName="Main Menu"
+            extraStyle={{backgroundColor: '#7f0000'}}
             buttonAction={() => _onClickMainMenu()}
           />
         </Modal>

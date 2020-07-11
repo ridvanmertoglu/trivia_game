@@ -4,7 +4,7 @@ import {Button, View, TouchableOpacity, Text} from 'react-native';
 const GameModal = (props) => {
   return (
     <View style={styles.modalContainer}>
-      <View style={styles.modalSecondContainer}>
+      <View style={[styles.modalSecondContainer,props.extraStyle]}>
         <View style={styles.iconContainer}>
           <Text style={styles.icon}>{props.icon}</Text>
         </View>
@@ -29,7 +29,7 @@ export const styles = {
     flex: 1,
   },
   modalSecondContainer: {
-    backgroundColor: 'blue',
+    //backgroundColor: 'blue',
     flex: 1,
     alignItems: 'center',
     justifyContent: 'space-evenly',
@@ -44,7 +44,7 @@ export const styles = {
     alignItems: 'center',
     height: 50,
     width: 250,
-    backgroundColor: '#1e90ff',
+    backgroundColor: '#bf6b63',
     borderRadius: 10,
   },
   iconContainer: {
@@ -52,7 +52,7 @@ export const styles = {
     alignItems: 'center',
     width: 140,
     height: 140,
-    backgroundColor: '#a6dced',
+    backgroundColor: '#bf6b63',
     borderRadius: 120,
   },
   icon: {
