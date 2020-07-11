@@ -15,6 +15,7 @@ const AppNavigator = createStackNavigator(
   },
   {
     initialRouteName: 'Welcome',
+    headerMode: 'none',
   },
 );
 
