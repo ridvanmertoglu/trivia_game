@@ -1,12 +1,13 @@
 import React, {useState, useEffect, useRef} from 'react';
-import {Text, View, Button, Alert} from 'react-native';
+import {Text, View, Button, Alert, Modal} from 'react-native';
 import {connect} from 'react-redux';
+import GameModal from '../../components/GameModal';
 
 const Main = (props) => {
   const [userAnswer, setUserAnswer] = useState('');
   const [questionNumber, setQuestionNumber] = useState(0);
   const [answerList, setAnswerList] = useState([]);
-  const [allAnswer, setAllAnswer] = useState();
+  const [showFinishModal, setShowFinishModal] = useState(false);
   const [time, setTime] = useState(15);
 
   shuffle = (array) => {
@@ -45,10 +46,24 @@ const Main = (props) => {
           onPress={() =>
             item === props.questions[questionNumber].correct_answer
               ? setQuestionNumber(questionNumber + 1)
-              : Alert.alert('asdad')
+              : setShowFinishModal(true)
           }
         />
       ))}
+      {showFinishModal ? (
+        <Modal transparent visible={showFinishModal}>
+          <GameModal
+            icon="X"
+            mainDescription="Wrong"
+            subDescriptionOne="You failed."
+            subDescriptionTwo="Total: 0 points"
+            buttonName="Main Menu"
+            buttonAction={() => props.navigation.navigate('Welcome')}
+          />
+        </Modal>
+      ) : (
+        <Text>asdasd</Text>
+      )}
     </View>
   );
 };
