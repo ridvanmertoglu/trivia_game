@@ -7,6 +7,8 @@ import {styles} from './styles';
 const Main = (props) => {
   const [questionNumber, setQuestionNumber] = useState(0);
   const [answerList, setAnswerList] = useState([]);
+  const [fiftyJoker, setFiftyJoker] = useState(false);
+  const [fiftyJokerDisable, setFiftyJokerDisable] = useState(false);
   const [showFalseModal, setShowFalseModal] = useState(false);
   const [showTrueModal, setShowTrueModal] = useState(false);
   const [showTimeModal, setShowTimeModal] = useState(false);
@@ -24,13 +26,18 @@ const Main = (props) => {
   useEffect(() => {
     let allAnswerList = [];
     setAnswerList([...allAnswerList]);
-    props.questions[questionNumber].incorrect_answers.forEach((element) => {
-      allAnswerList.push(element);
-    });
+    if (!fiftyJoker) {
+      props.questions[questionNumber].incorrect_answers.forEach((element) => {
+        allAnswerList.push(element);
+      });
+    } else {
+      setFiftyJokerDisable(true);
+      allAnswerList.push(props.questions[questionNumber].incorrect_answers[0]);
+    }
     allAnswerList.push(props.questions[questionNumber].correct_answer);
     _shuffle(allAnswerList);
     setAnswerList([...allAnswerList]);
-  }, [questionNumber]);
+  }, [questionNumber, fiftyJoker]);
 
   useEffect(() => {
     if (time === 0) {
@@ -50,6 +57,7 @@ const Main = (props) => {
 
   _correctAnswer = () => {
     setTotalPoints(totalPoints + (questionNumber + 1) * 5);
+    setFiftyJoker(false);
     if (questionNumber === 9) {
       setShowFinishModal(true);
     } else {
@@ -78,14 +86,28 @@ const Main = (props) => {
           <Text style={styles.headerText}>{time}</Text>
         </View>
       </View>
+
+      <TouchableOpacity
+        disabled={fiftyJokerDisable}
+        onPress={() => setFiftyJoker(true)}>
+        <View
+          style={[
+            styles.fiftyJokerButton,
+            {backgroundColor: fiftyJokerDisable ? '#5b9ea6' : '#ffccff'},
+          ]}>
+          <Text>%50</Text>
+        </View>
+      </TouchableOpacity>
+
       <View style={[styles.questionContainer, styles.shadow]}>
         <Text style={styles.question}>
           {props.questions[questionNumber].question}
         </Text>
       </View>
 
-      {answerList.map((item) => (
+      {answerList.map((item, index) => (
         <TouchableOpacity
+          key={index}
           onPress={() =>
             item === props.questions[questionNumber].correct_answer
               ? _correctAnswer()

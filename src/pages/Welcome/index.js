@@ -1,4 +1,3 @@
-/* @flow */
 import React, {useState} from 'react';
 import {Text, View, Picker, TouchableOpacity, Image} from 'react-native';
 import {styles} from './styles';

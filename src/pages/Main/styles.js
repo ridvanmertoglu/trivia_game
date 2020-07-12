@@ -22,6 +22,14 @@ export const styles = {
     fontWeight: 'bold',
     textAlign: 'center',
   },
+  fiftyJokerButton: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 20,
+    height: 50,
+    width: 50,
+    borderRadius: 25,
+  },
   questionContainer: {
     justifyContent: 'center',
     alignItems: 'center',
