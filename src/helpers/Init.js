@@ -1,7 +1,6 @@
 import React, {useEffect} from 'react';
-import {Text, View, Picker, StyleSheet} from 'react-native';
 import {connect} from 'react-redux';
-import {getCategories} from '../api/questions';
+import {getCategories} from '../api';
 import Navigator from '../pages/Navigator';
 
 import {
@@ -27,14 +26,6 @@ const Init = (props) => {
   }, []);
   return <Navigator />;
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-});
 
 const mapStateToProps = ({categoriesReducer}) => {
   const {categories} = categoriesReducer;

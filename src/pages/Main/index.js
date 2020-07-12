@@ -1,7 +1,8 @@
 import React, {useState, useEffect} from 'react';
-import {Text, View, Button, Modal} from 'react-native';
+import {Text, View, Modal, TouchableOpacity} from 'react-native';
 import {connect} from 'react-redux';
 import GameModal from '../../components/GameModal';
+import {styles} from './styles';
 
 const Main = (props) => {
   const [questionNumber, setQuestionNumber] = useState(0);
@@ -9,6 +10,7 @@ const Main = (props) => {
   const [showFalseModal, setShowFalseModal] = useState(false);
   const [showTrueModal, setShowTrueModal] = useState(false);
   const [showTimeModal, setShowTimeModal] = useState(false);
+  const [showFinishModal, setShowFinishModal] = useState(false);
   const [totalPoints, setTotalPoints] = useState(0);
   const [time, setTime] = useState(15);
 
@@ -48,7 +50,11 @@ const Main = (props) => {
 
   _correctAnswer = () => {
     setTotalPoints(totalPoints + (questionNumber + 1) * 5);
-    setShowTrueModal(true);
+    if (questionNumber === 9) {
+      setShowFinishModal(true);
+    } else {
+      setShowTrueModal(true);
+    }
   };
 
   _onClickMainMenu = () => {
@@ -57,19 +63,40 @@ const Main = (props) => {
   };
 
   return (
-    <View style={{marginTop: 50, alignItems: 'center'}}>
-      <Text>{props.questions[questionNumber].question}</Text>
-      <Text>{time}</Text>
+    <View style={styles.container}>
+      <View style={[styles.header, styles.shadow]}>
+        <View style={styles.headerTextContainer}>
+          <Text style={styles.headerText}>Question</Text>
+          <Text style={styles.headerText}>{questionNumber + 1}/10</Text>
+        </View>
+        <View style={styles.headerTextContainer}>
+          <Text style={styles.headerText}>Points</Text>
+          <Text style={styles.headerText}>{totalPoints}</Text>
+        </View>
+        <View style={styles.headerTextContainer}>
+          <Text style={styles.headerText}>Remaining time</Text>
+          <Text style={styles.headerText}>{time}</Text>
+        </View>
+      </View>
+      <View style={[styles.questionContainer, styles.shadow]}>
+        <Text style={styles.question}>
+          {props.questions[questionNumber].question}
+        </Text>
+      </View>
+
       {answerList.map((item) => (
-        <Button
-          title={item}
+        <TouchableOpacity
           onPress={() =>
             item === props.questions[questionNumber].correct_answer
               ? _correctAnswer()
               : setShowFalseModal(true)
-          }
-        />
+          }>
+          <View style={[styles.answerButton, styles.shadow]}>
+            <Text>{item}</Text>
+          </View>
+        </TouchableOpacity>
       ))}
+
       {showTrueModal ? (
         <Modal transparent visible={showTrueModal}>
           <GameModal
@@ -78,8 +105,22 @@ const Main = (props) => {
             subDescriptionOne={`You earned ${(questionNumber + 1) * 5} points`}
             subDescriptionTwo={`Total: ${totalPoints} points`}
             buttonName="Next Question"
-            extraStyle={{backgroundColor: '#52cc00'}}
+            extraStyle={styles.trueModal}
             buttonAction={() => _onClickNextQuestion()}
+          />
+        </Modal>
+      ) : null}
+
+      {showFinishModal ? (
+        <Modal transparent visible={showFinishModal}>
+          <GameModal
+            icon="★"
+            mainDescription="You won!"
+            subDescriptionOne="All answers are correct."
+            subDescriptionTwo={`Total: ${totalPoints} points`}
+            buttonName="Main Menu"
+            extraStyle={styles.trueModal}
+            buttonAction={() => _onClickMainMenu()}
           />
         </Modal>
       ) : null}
@@ -92,7 +133,7 @@ const Main = (props) => {
             subDescriptionOne="You failed."
             subDescriptionTwo={`Total: ${totalPoints} points`}
             buttonName="Main Menu"
-            extraStyle={{backgroundColor: '#eb5757'}}
+            extraStyle={styles.falseModal}
             buttonAction={() => _onClickMainMenu()}
           />
         </Modal>
@@ -102,11 +143,11 @@ const Main = (props) => {
         <Modal transparent visible={showTimeModal}>
           <GameModal
             icon="!"
-            mainDescription="Time is up!"
-            subDescriptionOne="You failed."
+            mainDescription="Time's up!"
+            subDescriptionOne="You are late,time's up."
             subDescriptionTwo={`Total: ${totalPoints} points`}
             buttonName="Main Menu"
-            extraStyle={{backgroundColor: '#7f0000'}}
+            extraStyle={styles.timeModal}
             buttonAction={() => _onClickMainMenu()}
           />
         </Modal>

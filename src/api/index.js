@@ -1,8 +1,5 @@
 import axios from 'axios';
 
-const apiUrl =
-  'https://opentdb.com/api.php?amount=10&category=10&difficulty=easy&type=multiple';
-
 const categoryUrl = 'https://opentdb.com/api_category.php';
 
 export const getQuestions = async (choosenCategory, choosenDifficulty) => {

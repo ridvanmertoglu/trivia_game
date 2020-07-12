@@ -3,7 +3,7 @@ import React, {useState} from 'react';
 import {Text, View, Picker, TouchableOpacity, Image} from 'react-native';
 import {styles} from './styles';
 import {connect} from 'react-redux';
-import {getQuestions} from '../../api/questions';
+import {getQuestions} from '../../api';
 import {images} from '../../utils/images';
 
 import {
