@@ -16,7 +16,6 @@ const Init = (props) => {
     try {
       const result = await getCategories();
       props.categoriesSuccess(result.data.trivia_categories);
-      console.log(result.data.trivia_categories);
     } catch (error) {
       props.categoriesFail();
     }

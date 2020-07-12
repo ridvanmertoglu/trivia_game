@@ -20,7 +20,6 @@ const Welcome = (props) => {
     getQuestions(selectedCategory, selectedDifficulty)
       .then((response) => {
         props.questionsSuccess(response.data.results);
-        console.log(response.data.results);
         props.navigation.navigate('Main');
       })
       .catch((error) => {
@@ -38,9 +37,7 @@ const Welcome = (props) => {
         <Picker
           selectedValue={selectedCategory}
           style={styles.picker}
-          onValueChange={(itemValue, itemIndex) =>
-            setSelectedCategory(itemValue)
-          }>
+          onValueChange={(itemValue) => setSelectedCategory(itemValue)}>
           {props.categories.map((item, index) => (
             <Picker.Item
               key={index}
@@ -53,9 +50,7 @@ const Welcome = (props) => {
         <Picker
           selectedValue={selectedDifficulty}
           style={styles.picker}
-          onValueChange={(itemValue, itemIndex) =>
-            setSelectedDifficulty(itemValue)
-          }>
+          onValueChange={(itemValue) => setSelectedDifficulty(itemValue)}>
           <Picker.Item label="Easy" value="easy" />
           <Picker.Item label="Medium" value="medium" />
           <Picker.Item label="Hard" value="hard" />
